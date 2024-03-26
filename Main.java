@@ -1,186 +1,149 @@
-class Form{
+import java.util.*;
 
-    private String color;
-    private static int counter = 0;
-    public Form()
-    {
-        this.color = "white";
-        counter++;
+//problema 1
+/*
+public class Main {
+    public static void main(String[] args) {
+
+        List<Integer> x = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            x.add(random.nextInt(11));
+        }
+        Collections.sort(x);
+
+        List<Integer> y = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            y.add(random.nextInt(11));
+        }
+        Collections.sort(y);
+
+        //a
+        List<Integer> xPlusY = new ArrayList<>(x);
+        xPlusY.addAll(y);
+        Collections.sort(xPlusY);
+
+        //b
+        Set<Integer> zSet = new TreeSet<>(x);
+        zSet.retainAll(y);
+
+        //c
+        List<Integer> xMinusY = new ArrayList<>(x);
+        xMinusY.removeAll(y);
+
+        //d
+        int p = 4;
+        List<Integer> xPlusYLimitedByP = new ArrayList<>();
+        for (Integer num : xPlusY) {
+            if (num <= p) {
+                xPlusYLimitedByP.add(num);
+            }
+        }
+
+        System.out.println("Lista x: " + x);
+        System.out.println("Lista y: " + y);
+        System.out.println("Lista xPlusY: " + xPlusY);
+        System.out.println("Setul zSet: " + zSet);
+        System.out.println("Lista xMinusY: " + xMinusY);
+        System.out.println("Lista xPlusYLimitedByP: " + xPlusYLimitedByP);
+    }
+}
+*/
+
+//problema 2
+class Student implements Comparable <Student> {
+    private final String nume;
+    private final String grupa;
+    private final List <Integer> note;
+
+    public Student(String nume, String grupa, List <Integer> note) {
+        this.nume = nume;
+        this.grupa = grupa;
+        this.note = note;
     }
 
-    public Form(String color)
-    {
-        this.color=color;
-        counter++;
+    public double Media() {
+        int sum = 0;
+        for (Integer nota : note) {
+            sum += nota;
+        }
+        return (double) sum / note.size();
     }
 
-    public float GetArea()
-    {
-        return 0;
+    public int NrRestante() {
+        int count = 0;
+        for (Integer nota : note) {
+            if (nota < 5) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public String getName() {
+        return nume;
+    }
+
+    public String getGroup() {
+        return grupa;
+    }
+
+    public List <Integer> getGrades() {
+        return note;
     }
 
     @Override
-    public String toString()
-    {
-        return "This form has the color " + color;
+    public int compareTo(Student other) {
+        return this.nume.compareTo(other.nume);
     }
 
-    public static int getCounter()
-    {
-        return counter;
-    }
-}
-
-class Triangle extends Form{
-    private float height;
-    private float base;
-
-    public Triangle()
-    {
-        super();
-        this.height=0;
-        this.base=0;
+    @Override
+    public String toString() {
+        return "Student{" + "name='" + nume + '\'' + ", group='" + grupa + '\'' + ", grades=" + note + '}';
     }
 
-    public Triangle(float height, float base, String color)
-    {
-        super(color);
-        this.height=height;
-        this.base=base;
-    }
+    public static void main(String[] args) {
+        List<Student> studenti= new ArrayList<>();
 
-    public float getArea()
-    {
-        return (base+height)/2;
-    }
-
-    public String toString()
-    {
-        return super.toString() + getArea();
-    }
-
-}
-
-class Circle extends Form{
-
-    private float radius;
-
-    public Circle()
-    {
-        super();
-        this.radius=0;
-    }
-
-    public Circle(float radius, String color)
-    {
-        super(color);
-        this.radius=radius;
-    }
-
-    public float getArea()
-    {
-        return (float) (Math.PI * radius * radius);
-    }
-
-    public String toString()
-    {
-        return super.toString() + getArea();
-    }
-}
-
-class Square extends Form{
-
-    private float side;
-
-    public Square()
-    {
-        super();
-        this.side=0;
-    }
-
-    public Square(float side, String color)
-    {
-        super(color);
-        this.side=side;
-    }
-
-    public float getArea()
-    {
-        return side * side;
-    }
-
-    public String toString()
-    {
-        return super.toString() + getArea();
-    }
-}
-
-class StringRandomizer {
-    java.util.Random rand = new java.util.Random();
-
-    public String randomString(int n) {
-        int countLetters = 'z' - 'a';
-        char result[] = new char[n];
-
-        for (int i = 0; i < n; i++) {
-            result[i] = (char) ('a' + rand.nextInt(countLetters));
-        }
-        return new String(result);
-    }
-
-    public String randomString(int n, String alphabet) {
-        int countLetters = alphabet.length();
-        char result[] = new char[n];
-        for (int i = 0; i < n; i++) {
-            result[i] = alphabet.charAt(rand.nextInt(countLetters));
+        Random random = new Random();
+        for (int i = 0; i < 10; i++) {
+            List <Integer> randomGrades = new ArrayList<>();
+            for (int j = 0; j < 5; j++) {
+                randomGrades.add(random.nextInt(7) + 4);
+            }
+            studenti.add(new Student("Student" + (i + 1), "Grupa " + (i % 3 + 1), randomGrades));
         }
 
-        return new String(result);
+        //a)
+        System.out.println("Studentii initial:");
+        for (Student student : studenti) {
+            System.out.println(student);
+        }
+
+        //b1)
+        System.out.println("Studentii in ordine alfabetica, pe grupe:");
+        studenti.sort(Comparator.comparing(Student::getName));
+        for (Student student : studenti) {
+            System.out.println(student.getName() + " - " + student.getGroup());
+        }
+
+        //b2)
+        System.out.println("Studentii in ordinea descrescatoare a mediilor:");
+        studenti.sort(Comparator.comparing(Student::Media).reversed());
+        for (Student student : studenti) {
+            System.out.println(student.getName() + " - Media: " + student.Media());
+        }
+
+        //b3)
+        System.out.println("Studentii in ordinea crescatoare a numarului de restante:");
+        studenti.sort(Comparator.comparingInt(Student::NrRestante));
+        for (Student student : studenti) {
+            System.out.println(student.getName() + " - Restante: " + student.NrRestante());
+        }
     }
 }
 
-class PasswordMaker {
-    private static final int MAGIC_NUMBER = 8;
-    private static final String MAGIC_STRING = "abcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()";
 
-    private String name;
 
-    public PasswordMaker(String name) {
-        this.name = name;
-    }
 
-    public String getPassword()
-    {
-        StringRandomizer randomizer = new StringRandomizer();
 
-        String randomPart = randomizer.randomString(MAGIC_NUMBER);
-
-        String alphabet = MAGIC_STRING.substring(5, 15);
-
-        String alphabetPart = randomizer.randomString(10, alphabet);
-
-        String nameLengthPart = String.valueOf(name.length());
-
-        int randomNumber = randomizer.rand.nextInt(51);
-
-        String password = randomPart + alphabetPart + nameLengthPart + randomNumber;
-
-        return password;
-    }
-}
-
-public class Main
-{public static void main(String[] args)
-{
-    Triangle tri = new Triangle(1.1f,2.0f,"green");
-    Circle c = new Circle(1.5f,"red");
-    Square sq = new Square(1.2f,"blue");
-    System.out.println("Triangle area = " + tri.getArea()+" details: " + tri);
-    System.out.println("Circle area = " + c.getArea() + " details: " + c);
-    System.out.println("Square area = " + sq.getArea() + " details: " + sq);
-    System.out.println("Counter Value = " + Form.getCounter());
-    PasswordMaker passwordMaker = new PasswordMaker("JohnDoe");
-    String password = passwordMaker.getPassword();
-    System.out.println("Generated Password: " + password);
-
-}}
