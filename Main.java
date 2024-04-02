@@ -1,149 +1,162 @@
-import java.util.*;
+/*  PROBLEMA 1
 
-//problema 1
-/*
+class IntCalculator {
+    public int state;
+
+    public IntCalculator(int initialState) {
+        this.state = initialState;
+    }
+
+    public IntCalculator add(int number) {
+        this.state += number;
+        return this;
+    }
+
+    public IntCalculator subtract(int number) {
+        this.state -= number;
+        return this;
+    }
+
+    public IntCalculator multiply(int number) {
+        this.state *= number;
+        return this;
+    }
+
+    public IntCalculator divide(int number)
+    {
+        this.state /= number;
+        return this;
+    }
+
+    public int result() {
+        return this.state;
+    }
+
+    public void clear() {
+        this.state = 0;
+    }
+}
+
+class AdvancedCalculator extends IntCalculator {
+
+    public AdvancedCalculator(int initialState) {
+        super(initialState);
+    }
+
+    public AdvancedCalculator divide(int number) {
+        if (number == 0) {
+            throw new IllegalArgumentException("Cannot divide by zero!");
+        }
+        this.state /= number;
+        return this;
+    }
+
+    public AdvancedCalculator power(int exponent) {
+        this.state = (int) Math.pow(this.state, exponent);
+        return this;
+    }
+
+    public AdvancedCalculator nthRoot(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Root must be a positive integer!");
+        }
+        this.state = (int) Math.pow(this.state, 1.0 / n);
+        return this;
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
 
-        List<Integer> x = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 5; i++) {
-            x.add(random.nextInt(11));
-        }
-        Collections.sort(x);
+        IntCalculator calculator = new IntCalculator(10);
+        int resultA = calculator.add(5).subtract(3).multiply(2).result();
+        System.out.println("a) " + resultA);
 
-        List<Integer> y = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
-            y.add(random.nextInt(11));
-        }
-        Collections.sort(y);
+        AdvancedCalculator advancedCalculator = new AdvancedCalculator(10);
+        int resultB = advancedCalculator.add(5).subtract(3).multiply(2).divide(4).result();
+        System.out.println("b) " + resultB);
 
-        //a
-        List<Integer> xPlusY = new ArrayList<>(x);
-        xPlusY.addAll(y);
-        Collections.sort(xPlusY);
+        int resultC = advancedCalculator.power(2).result();
+        System.out.println("c) " + resultC);
 
-        //b
-        Set<Integer> zSet = new TreeSet<>(x);
-        zSet.retainAll(y);
-
-        //c
-        List<Integer> xMinusY = new ArrayList<>(x);
-        xMinusY.removeAll(y);
-
-        //d
-        int p = 4;
-        List<Integer> xPlusYLimitedByP = new ArrayList<>();
-        for (Integer num : xPlusY) {
-            if (num <= p) {
-                xPlusYLimitedByP.add(num);
-            }
-        }
-
-        System.out.println("Lista x: " + x);
-        System.out.println("Lista y: " + y);
-        System.out.println("Lista xPlusY: " + xPlusY);
-        System.out.println("Setul zSet: " + zSet);
-        System.out.println("Lista xMinusY: " + xMinusY);
-        System.out.println("Lista xPlusYLimitedByP: " + xPlusYLimitedByP);
+        int resultD = advancedCalculator.nthRoot(2).result();
+        System.out.println("d) " + resultD);
     }
 }
 */
+//PROBLEMA 2
 
-//problema 2
-class Student implements Comparable <Student> {
-    private final String nume;
-    private final String grupa;
-    private final List <Integer> note;
+abstract class ACalculator <T> {
+    protected T state;
 
-    public Student(String nume, String grupa, List <Integer> note) {
-        this.nume = nume;
-        this.grupa = grupa;
-        this.note = note;
+    public T result() {
+        return this.state;
     }
 
-    public double Media() {
-        int sum = 0;
-        for (Integer nota : note) {
-            sum += nota;
-        }
-        return (double) sum / note.size();
+    public void clear() {
+        this.state = null;
     }
 
-    public int NrRestante() {
-        int count = 0;
-        for (Integer nota : note) {
-            if (nota < 5) {
-                count++;
-            }
-        }
-        return count;
+    public abstract void init(T initialState);
+}
+
+class NewIntCalculator extends ACalculator<Integer> {
+
+    public void init(Integer initialState) {
+        this.state = initialState;
     }
 
-    public String getName() {
-        return nume;
+    public NewIntCalculator add(Integer number) {
+        this.state += number;
+        return this;
     }
 
-    public String getGroup() {
-        return grupa;
+    public NewIntCalculator subtract(Integer number) {
+        this.state -= number;
+        return this;
     }
 
-    public List <Integer> getGrades() {
-        return note;
-    }
-
-    @Override
-    public int compareTo(Student other) {
-        return this.nume.compareTo(other.nume);
-    }
-
-    @Override
-    public String toString() {
-        return "Student{" + "name='" + nume + '\'' + ", group='" + grupa + '\'' + ", grades=" + note + '}';
-    }
-
-    public static void main(String[] args) {
-        List<Student> studenti= new ArrayList<>();
-
-        Random random = new Random();
-        for (int i = 0; i < 10; i++) {
-            List <Integer> randomGrades = new ArrayList<>();
-            for (int j = 0; j < 5; j++) {
-                randomGrades.add(random.nextInt(7) + 4);
-            }
-            studenti.add(new Student("Student" + (i + 1), "Grupa " + (i % 3 + 1), randomGrades));
-        }
-
-        //a)
-        System.out.println("Studentii initial:");
-        for (Student student : studenti) {
-            System.out.println(student);
-        }
-
-        //b1)
-        System.out.println("Studentii in ordine alfabetica, pe grupe:");
-        studenti.sort(Comparator.comparing(Student::getName));
-        for (Student student : studenti) {
-            System.out.println(student.getName() + " - " + student.getGroup());
-        }
-
-        //b2)
-        System.out.println("Studentii in ordinea descrescatoare a mediilor:");
-        studenti.sort(Comparator.comparing(Student::Media).reversed());
-        for (Student student : studenti) {
-            System.out.println(student.getName() + " - Media: " + student.Media());
-        }
-
-        //b3)
-        System.out.println("Studentii in ordinea crescatoare a numarului de restante:");
-        studenti.sort(Comparator.comparingInt(Student::NrRestante));
-        for (Student student : studenti) {
-            System.out.println(student.getName() + " - Restante: " + student.NrRestante());
-        }
+    public NewIntCalculator multiply(Integer number) {
+        this.state *= number;
+        return this;
     }
 }
 
+class DoubleCalculator extends ACalculator<Double> {
 
+    public void init(Double initialState) {
+        this.state = initialState;
+    }
 
+    public DoubleCalculator add(Double number) {
+        this.state += number;
+        return this;
+    }
+
+    public DoubleCalculator subtract(Double number) {
+        this.state -= number;
+        return this;
+    }
+
+    public DoubleCalculator multiply(Double number) {
+        this.state *= number;
+        return this;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+
+        NewIntCalculator intCalculator = new NewIntCalculator();
+        intCalculator.init(10);
+        int resultInt = intCalculator.add(5).subtract(3).multiply(2).result();
+        System.out.println("(10 + 5 - 3) * 2 = " + resultInt);
+
+        DoubleCalculator doubleCalculator = new DoubleCalculator();
+        doubleCalculator.init(10.0);
+        double resultDouble = doubleCalculator.add(5.0).subtract(3.3).multiply(2.2).result();
+        System.out.println("(10 + 5 - 3.3) * 2.2 = " + resultDouble);
+    }
+}
 
 
